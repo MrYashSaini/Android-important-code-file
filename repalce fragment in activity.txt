@@ -1,0 +1,10 @@
+//set fragment on activity
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BlankFragment blankFragment = new BlankFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fortest,blankFragment);
+                transaction.commit();
+            }
+        });

@@ -1,0 +1,75 @@
+private static final String file_name = "example.txt";
+    EditText entrybox;
+    Button save,get;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        entrybox = findViewById(R.id.entrybox);
+        save = findViewById(R.id.save);
+        get = findViewById(R.id.get);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = entrybox.getText().toString();
+                FileOutputStream fos = null;
+                try{
+                fos = openFileOutput(file_name,MODE_PRIVATE);
+                fos.write(text.getBytes());
+                entrybox.getText().clear();
+                    Toast.makeText(MainActivity.this, "save text"+getFilesDir()+"/"+file_name, Toast.LENGTH_SHORT).show();
+                }
+                catch (FileNotFoundException e){
+                    e.printStackTrace();
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+                finally {
+                    if(fos!= null){
+                        try{
+                            fos.close();
+                        }
+                        catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        get.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileInputStream fis = null;
+                try {
+                    fis = openFileInput(file_name);
+                    InputStreamReader isr = new InputStreamReader(fis);
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder sb = new StringBuilder();
+                    String text;
+                    while((text = br.readLine())!= null){
+                        sb.append(text).append("\n");
+                    }
+                    entrybox.setText(sb.toString());
+                }
+                catch (FileNotFoundException e){
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if(fis!=null)
+                        try{
+                            fis.close();
+                        }
+                        catch (IOException e){
+                            e.printStackTrace();
+                        }
+                }
+
+            }
+        });
+
+    }

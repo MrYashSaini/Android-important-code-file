@@ -1,0 +1,72 @@
+name = findViewById(R.id.namebox);
+        contact=findViewById(R.id.contactbox);
+        dob = findViewById(R.id.dobbox);
+        insert = findViewById(R.id.insertbutton);
+        update = findViewById(R.id.updatebutton);
+        delete = findViewById(R.id.deletebutton);
+        view =findViewById(R.id.getbutton);
+        db = new databasemenu(this);
+//set click listener 
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nameTXT = name.getText().toString();
+                String contactTXT = contact.getText().toString();
+                String dobTXT = dob.getText().toString();
+
+                Boolean checkinsertdata = db.insertuserdata(nameTXT,contactTXT,dobTXT);
+                if(checkinsertdata ==true)
+                    Toast.makeText(MainActivity.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "New Not Entry Inserted", Toast.LENGTH_SHORT).show();
+            }
+        });
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nameTXT = name.getText().toString();
+                String contactTXT = contact.getText().toString();
+                String dobTXT = dob.getText().toString();
+
+                Boolean checkupdatedata = db.updateuserdata(nameTXT,contactTXT,dobTXT);
+                if(checkupdatedata ==true)
+                    Toast.makeText(MainActivity.this, "Entry update", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "Entry Not Inserted", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nameTXT = name.getText().toString();
+                Boolean checkupdatedata = db.deleteuserdata(nameTXT);
+                if(checkupdatedata ==true)
+                    Toast.makeText(MainActivity.this, "Entry delete", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MainActivity.this, "Entry Not delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor res = db.getdata();
+                if(res.getCount()==0){
+                    Toast.makeText(MainActivity.this, "No Entry Exists", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                StringBuffer buffer = new StringBuffer();
+                while(res.moveToNext()){
+                    buffer.append("Name :"+res.getString(0)+"\n");
+                    buffer.append("Contact :"+res.getString(1)+"\n");
+                    buffer.append("date of birth :"+res.getString(2)+"\n\n");
+
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setCancelable(true);
+                builder.setTitle("User Entries");
+                builder.setMessage(buffer.toString());
+                builder.show();
+            }
+        });
